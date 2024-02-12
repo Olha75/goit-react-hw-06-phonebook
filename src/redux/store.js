@@ -1,11 +1,7 @@
 import { createStore } from 'redux';
 import { devToolsEnhancer } from '@redux-devtools/extension';
+import reducer from './reducer';
 
-const initialState = { contacts: [], filter: '' };
-
-const reducer = (state = initialState) => {
-  return state;
-};
 const enchancer = devToolsEnhancer();
 const store = createStore(reducer, enchancer);
 

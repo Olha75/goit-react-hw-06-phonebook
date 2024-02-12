@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
 
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
+import { addContact, deleteContact } from '../redux/actions';
 
 const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('contacts'));
-    return data || [];
-  });
+  const contacts = useSelector(store => store.contacts);
+  const dispatch = useDispatch();
+
+  // const [contacts, setContacts] = useState(() => {
+  //   const data = JSON.parse(localStorage.getItem('contacts'));
+  //   return data || [];
+  // });
 
   const [filter, setFilter] = useState('');
 
@@ -25,24 +30,17 @@ const App = () => {
     );
   };
 
-  const addContact = data => {
+  const onAddContact = data => {
     if (isDuplicate(data)) {
       return alert('Цей контакт вже їснує!');
     }
 
-    setContacts(prevContacts => {
-      const newContact = {
-        id: nanoid(),
-        ...data,
-      };
-      return [...prevContacts, newContact];
-    });
+    const action = addContact(data);
+    dispatch(action);
   };
 
-  const deleteContact = id => {
-    setContacts(prevContacts =>
-      prevContacts.filter(contact => contact.id !== id)
-    );
+  const onDeleteContact = id => {
+    dispatch(deleteContact(id));
   };
 
   const changeFilter = ({ target }) => {
@@ -75,7 +73,7 @@ const App = () => {
       <div className="blockPhonebook">
         <h1 className="titlePhonebook">Phonebook</h1>
         <div>
-          <ContactForm onSubmit={addContact} />
+          <ContactForm onSubmit={onAddContact} />
         </div>
         <h2 className="titleContacts">Contacts</h2>
         <div className="formContacts">
@@ -83,7 +81,7 @@ const App = () => {
           {contacts.length > 0 || filter ? (
             <ContactList
               items={filteredContacts}
-              deleteContact={deleteContact}
+              deleteContact={onDeleteContact}
             />
           ) : (
             <p className="pMessage">No contacts found</p>
