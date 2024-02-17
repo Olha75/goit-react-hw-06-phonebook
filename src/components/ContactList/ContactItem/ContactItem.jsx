@@ -1,5 +1,6 @@
-import css from './contactItem.module.css';
 import React from 'react';
+import { deleteContact } from '../../../redux/contacts/contacts-slice';
+import css from './contactItem.module.css';
 
 const ContactItem = ({ id, name, number, deleteContact }) => (
   <li className={css.contactsItem} key={id}>

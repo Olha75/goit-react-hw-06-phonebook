@@ -1,10 +1,13 @@
-import { useState } from 'react';
-import css from './contactForm.module.css';
+import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../../redux/contacts/contacts-slice';
+import css from './contactForm.module.css';
 
 const INITIAL_STATE = { name: '', number: '' };
 
-const ContactForm = ({ onSubmit }) => {
+const ContactForm = () => {
+  const dispatch = useDispatch();
   const [state, setState] = useState({ ...INITIAL_STATE });
 
   const handleChange = ({ target }) => {
@@ -30,9 +33,10 @@ const ContactForm = ({ onSubmit }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit({ ...state });
+    dispatch(addContact({ ...state }));
     setState({ ...INITIAL_STATE });
   };
+
   const { name, number } = state;
   const nameId = nanoid();
   const telId = nanoid();
